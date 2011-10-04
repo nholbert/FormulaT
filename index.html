@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <title>Painting Test</title>
+    <link rel="stylesheet" href="default.css">
+    <script type="text/javascript" src="paint.js"></script>
+    <script type="text/javascript" src="track.js"></script>
+    <script type="text/javascript" src="entities.js"></script>
+
+    <script src="RGraph/libraries/RGraph.common.core.js"></script>
+    <script src="RGraph/libraries/RGraph.line.js"></script>             <!-- Just needed for line graphs -->
+    <style>
+        .error{
+            position: absolute; left: 200px; top: 150px; z-index: 3;
+            width: 200px;
+            background: rgb(43,215,153);
+            box-shadow: 5px 5px 5px #000000;
+            -moz-box-shadow: 5px 5px 5px #000000;
+            -webkit-box-shadow: 5px 5px 5px #000000;
+            border: solid;
+            border-radius: 10px;
+            border-width: 1px;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body onload="init();">
+    <canvas id="paint" style="position: absolute; left: 0px; top: 0px; z-index: 0">Browser does not support HTML5</canvas>
+    <canvas id="track" style="position: absolute; left: 0px; top: 0px; z-index: 1">Browser does not support HTML5</canvas>
+    <canvas id="car" style="position: absolute; left: 0px; top: 0px; z-index: 2">Browser does not support HTML5</canvas>
+    <canvas id="graph" style="position: absolute; left: 650px; top: 150px; z-index:2">Browser does not support HTML5</canvas>
+    <img id="racecar" src="racecar.gif" style="display:none;">
+    <div id="crashMessage" class="error" style="display: none; text-align">
+        <p style="font-size: 18px;">
+           You went too fast and crashed! Be more careful next time!
+        </p>
+    </div>
+    <div id="timeMessage" class="error" style="display: none; text-align">
+        <p style="font-size: 18px;">
+           You ran out of time! Try to find a way to get around the track faster!
+        </p>
+    </div>
+    <div id="speedMessage" class="error" style="display: none;">
+        <p style="font-size: 18px;">
+           You can't slow down that fast! Your car spun out and crashed!
+        </p>
+    </div>
+    <div id="finishMessage" class="error" style="display: none;">
+        <p style="font-size: 18px;">
+           You did it! I didn't think you had it in ya!
+        </p>
+    </div>
+    <div style="position: absolute; left: 700px; top: 20px; font-weight: bold; font-size: 14px"> Select Track --></div>
+    <select name="tracks" id="tracks" style="position: absolute; left: 810px; top: 18px;" onchange="init()">
+        <option value="Square" selected="selected">Square</option>
+        <option value="Corners">Corners</option>
+    </select>
+    <div style="position: absolute; left: 700px; top: 50px; font-weight: bold; font-size: 14px"> Set Max-Speed</div>
+    <select name= "brush" size="7" id="brushColor" style="position: absolute; left: 700px; top: 65px;">
+        <option value="#7C50A4" selected="selected">Violet-----1</option>
+        <option value="#345DA9">Blue-------3</option>
+        <option value="#54C4C4">Cyan-------5</option>
+        <option value="#F16A15">Orange-----7</option>
+        <option value="#D73229">Red--------9</option>
+        <option value="#000000">Black----MAX</option>
+    </select>
+    <button id="Clear" name="Clear" type="button" onclick="wipePaint()" style="position: absolute; left: 810px; top: 75px; font-weight: bold;">Clear Paint</button>
+    <button id="Reset" name="Reset" type="button" onclick="resetCar()" style="position: absolute; left: 810px; top: 100px; font-weight: bold;">Reset Car</button>
+    <button id="Race" name="Race" type="button" onclick="tick()" style="position: absolute; left: 810px; top: 140px; font-weight: bold;">Race!</button>
+    <div id="timer" name="timer" style="position: absolute; left: 435px; top: 150px; font-weight: bold; font-size: 14px; z-index: 3">Curr Time = 0.00</div>
+    <div id="lastTime" name="lastTime" style="position: absolute; left: 435px; top: 170px; font-weight: bold; font-size: 14px; z-index: 3">Last Time =</div>
+    <div id="bestTime" name="bestTime" style="position: absolute; left: 435px; top: 190px; font-weight: bold; font-size: 14px; z-index: 3">Best Time =</div>
+
+</body>
+</html>

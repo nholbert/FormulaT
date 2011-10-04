@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <title>Painting Test</title>
+    <link rel="stylesheet" href="default.css">
+    <script type="text/javascript" src="paint.js"></script>
+    <script src="RGraph/libraries/RGraph.common.core.js"></script>
+    <script src="RGraph/libraries/RGraph.line.js"></script>             <!-- Just needed for line graphs -->
+    <style>
+        .error{
+            position: absolute; left: 100px; top: 100px; z-index: 2;
+            width: 200px; height: 100px;
+            background: rgb(43,215,153);
+            box-shadow: 5px 5px 5px #000000;
+            -moz-box-shadow: 5px 5px 5px #000000;
+            -webkit-box-shadow: 5px 5px 5px #000000;
+            border: solid;
+            border-radius: 10px;
+            border-width: 1px;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body onload="init();">
+    <div style="position: static; left: 0px; top: 0px;">
+    <canvas id="world" style="position: absolute; left: 0px; top: 0px; z-index: 0">Browser does not support HTML5</canvas>
+    <canvas id="car" style="position: absolute; left: 0px; top: 0px; z-index: 1">Browser does not support HTML5</canvas>
+    </div>
+    <canvas id="graph" style="position: absolute; left: 100px; top: 80px;">Browser does not support HTML5</canvas>
+
+    <img id="racecar" src="racecar.gif" style="display:none;">
+    <div id="crashMessage" class="error" style="display: none; text-align">
+        <p style="font-size: 18px;">
+           You went too fast and crashed! Be more careful next time!
+        </p>
+    </div>
+    <div id="speedMessage" class="error" style="display: none;">
+        <p style="font-size: 18px;">
+           You can't slow down that fast! Your car spun out and crashed!
+        </p>
+    </div>
+    <div id="finishMessage" class="error" style="display: none;">
+        <p style="font-size: 18px;"><br>
+           You did it! I didn't think you had it in ya!
+        </p>
+    </div>
+    <div style="position: absolute; left: 130px; top: 15px; font-weight: bold; font-size: 14px"> Set Max-Speed</div>
+    <select name= "brush" size="7" id="brushColor" style="position: absolute; left: 250px; top: 12px; z-index: 2">
+        <option value="#7C50A4" selected="selected">Violet-----1</option>
+        <option value="#345DA9">Blue-------2</option>
+        <option value="#54C4C4">Cyan-------3</option>
+        <option value="#F16A15">Orange-----4</option>
+        <option value="#D73229">Red--------5</option>
+        <option value="#000000">Black----MAX</option>
+    </select>
+    <button id="Clear" name="Clear" type="button" onclick="wipePaint()" style="position: absolute; left: 280px; top: 110px; z-index: 2; font-weight: bold;">Clear</button>
+    <button id="Reset" name="Reset" type="button" onclick="resetCar()" style="position: absolute; left: 280px; top: 140px; z-index: 2; font-weight: bold;">Reset</button>
+    <button id="Race" name="Race" type="button" onclick="tick()" style="position: absolute; left: 280px; top: 180px; z-index: 2; font-weight: bold;">Race!</button>
+
+</body>
+</html>
