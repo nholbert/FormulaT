@@ -1,0 +1,17 @@
+<html>
+  <head>
+    <title>FormulaT Test</title>
+  </head>
+  <body>
+    <canvas id="track" width="640" height="400"></canvas>
+    <script>
+      var canvas = document.getElementById("track");
+      var context = canvas.getContext("2d");
+      var track = new Image();
+      track.src = "Images/ringtrack.png";
+      track.onload = function() {
+        context.drawImage(track, 0, 0);
+      };
+    </script
+  </body>
+</html>
