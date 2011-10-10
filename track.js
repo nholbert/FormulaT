@@ -1,25 +1,5 @@
 var trackWidth;
 
-//function getClosestNodePaint (mx, my, r) {
-//    var nodenum = nodeArray.length;
-//    for (var i = 0; i < nodenum; i++) {
-//        var curr = nodeArray[i];
-//        if (curr.x < mx + r && curr.x > mx - r && curr.y < my + r && curr.y > my - r) {
-//            return curr;
-//        }
-//    }
-//    return null;
-//}
-
-//function nodeDraw(mx, my, r) {
-//    var modr = r + 5
-//    var paintNode = getClosestNodePaint(mx, my, modr);
-//    if (paintNode) {
-//        context.fillStyle = "white";
-//        context.fillText(paintNode.id, paintNode.x, paintNode.y);
-//    }
-//}
-
 function nodeDraw(){
     for (var i = 0; i < 20; i++) {
         var curr = nodeArray[i];
@@ -45,13 +25,6 @@ function paint(mx, my, r) {
         ptcontext.arc(mx, my, r, 0, Math.PI*2, true);
         ptcontext.closePath();
         ptcontext.fill();
-        //// redraw the unclipped grass section, player car, and finish line
-        //if (trackSelected==0){
-        //    trackIn.draw(context);
-        //}
-        //player1.draw(carcontx);
-        //finish.draw(context);
-        //nodeDraw(mx, my, r);
 }
 
 //----------------------//
@@ -144,6 +117,166 @@ function getSqNodes() {
             nx = 605;
             nodeArray.push( new node (nx, ny, id));
         }
+        trcontext.textAlign = "center";
+        trcontext.textBaseline = "middle";
+        trcontext.fillText(id, nx, ny);
+    }
+}
+
+//-------------------------//
+//     FIGURE 8 TRACK     //
+//-----------------------//
+
+function fig8track() {
+    this.width = 75;
+    this.color = "#199B19"; // grass color
+    
+    var cornerRadius = 50;
+    
+    this.draw = function draw(trcontext) {
+        //Finish Line
+        trcontext.fillStyle = "#CCFF33"; // finish line
+        trcontext.moveTo(575, 180);
+        trcontext.fillRect(575, 180, 100, 10);
+        
+        trcontext.fillStyle = this.color;
+        trcontext.beginPath();
+        //Right Lobe
+        trcontext.arc(475, 225, 185, 7*Math.PI/12, 17*Math.PI/12, true);
+        trcontext.lineTo(350, 100);
+        trcontext.lineTo(350, 0);
+        trcontext.lineTo(WIDTH, 0);
+        trcontext.lineTo(WIDTH, HEIGHT);
+        trcontext.lineTo(350, HEIGHT);
+        trcontext.lineTo(350, 350);
+        trcontext.closePath();
+        trcontext.fill();
+        //Left Lobe
+        trcontext.moveTo(350, 350);
+        trcontext.arc(225, 225, 185, 5*Math.PI/12, 19*Math.PI/12, false);
+        trcontext.lineTo(350, 100);
+        trcontext.lineTo(350, 0);
+        trcontext.lineTo(0, 0);
+        trcontext.lineTo(0, HEIGHT);
+        trcontext.lineTo(350, HEIGHT);
+        trcontext.closePath();
+        trcontext.fill();;
+
+        //Inside Grass
+        trcontext.arc(485, 225, 100, 0, Math.PI*2, false);
+        trcontext.closePath();
+        trcontext.fill();
+        trcontext.arc(215, 225, 100, 0, Math.PI*2, false);
+        trcontext.fill();
+    }
+}
+
+function getfig8Nodes() {
+    trcontext.fillStyle = "white";
+    var nx = 600;
+    var ny = 130;
+    var id = 0;
+    for (var i = 1; i < 21; i++) {
+        id += 1;
+        switch (id) {
+            case 1:
+                nodeArray.push( new node (nx, ny, id));
+                break;
+            case 2:
+                ny -= 30;
+                nx -= 50;
+                nodeArray.push( new node (nx, ny, id));
+                break;
+            case 3:
+                ny -= 20;
+                nx -= 65;
+                nodeArray.push( new node (nx, ny, id));
+                break;
+            case 4:
+                ny += 20;
+                nx -= 65;
+                nodeArray.push( new node (nx, ny, id));
+                break;
+            case 5:
+                ny += 60;
+                nx -= 70;
+                nodeArray.push( new node (nx, ny, id));
+                break;
+            case 6:
+                ny += 130;
+                nodeArray.push( new node (nx, ny, id));
+                break;
+            case 7:
+                ny += 60;
+                nx -= 70;
+                nodeArray.push( new node (nx, ny, id));
+                break;
+            case 8:
+                ny += 20;
+                nx -= 65;
+                nodeArray.push( new node (nx, ny, id));
+                break;
+            case 9:
+                ny -= 20;
+                nx -= 65;
+                nodeArray.push( new node (nx, ny, id));
+                break;
+            case 10:
+                ny -= 70;
+                nx -= 60;
+                nodeArray.push( new node (nx, ny, id));
+                break;
+            case 11:
+                ny -= 110;
+                //nx -= 60;
+                nodeArray.push( new node (nx, ny, id));
+                break;
+            case 12:
+                ny -= 70;
+                nx += 60;
+                nodeArray.push( new node (nx, ny, id));
+                break;
+            case 13:
+                ny -= 20;
+                nx += 65;
+                nodeArray.push( new node (nx, ny, id));
+                break;
+            case 14:
+                ny += 20;
+                nx += 65;
+                nodeArray.push( new node (nx, ny, id));
+                break;
+            case 15:
+                ny += 70;
+                nx += 70;
+                nodeArray.push( new node (nx, ny, id));
+                break;
+            case 16:
+                ny += 110;
+                nodeArray.push( new node (nx, ny, id));
+                break;
+            case 17:
+                ny += 70;
+                nx += 70;
+                nodeArray.push( new node (nx, ny, id));
+                break;
+            case 18:
+                ny += 20;
+                nx += 65;
+                nodeArray.push( new node (nx, ny, id));
+                break;
+            case 19:
+                ny -= 20;
+                nx += 65;
+                nodeArray.push( new node (nx, ny, id));
+                break;
+            case 20:
+                ny -= 70;
+                nx += 60;
+                nodeArray.push( new node (nx, ny, id));
+                break;
+        }
+
         trcontext.textAlign = "center";
         trcontext.textBaseline = "middle";
         trcontext.fillText(id, nx, ny);

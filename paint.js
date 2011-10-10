@@ -6,6 +6,7 @@ var GHEIGHT = 250;
 var trackSelected;
 var background;
 var sqtrack1;
+var fig8track1;
 var cornerTrack1;
 var player1;
 var nodeArray;
@@ -70,6 +71,12 @@ function setup() {
 	background.draw(ptcontext);
 	sqtrack1.draw(trcontext);
 	getSqNodes();
+    } else if (trackSelected==1) {
+	fig8track1 = new fig8track();
+	nodeArray = [];
+	background.draw(ptcontext);
+	fig8track1.draw(trcontext);
+	getfig8Nodes();
     } else {
 	cornertrack1 = new cornertrack();
 	nodeArray = [];

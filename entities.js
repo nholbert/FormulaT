@@ -70,7 +70,11 @@ function playerCar(x, y, vel, accel, heading, currNode){
 	var dAngle = Math.atan2(diffy, diffx);
 	if (this.heading!= dAngle) {
 	    if (Math.abs(this.heading - dAngle) > (3*Math.PI/2)) {
-		dAngle = dAngle - 2*Math.PI;
+		if (this.heading > 0) {
+		    dAngle = dAngle + 2*Math.PI;
+		} else {
+		    dAngle = dAngle - 2*Math.PI;
+		}
 	    }
 	    this.heading += (dAngle - this.heading)/18; // change to tweak how much the car turns
 	}
