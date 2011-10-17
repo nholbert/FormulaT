@@ -1,16 +1,16 @@
-var WIDTH = 960;
-var HEIGHT = 640;
+var WIDTH = 480;
+var HEIGHT = 320;
 var rdLines = HEIGHT / 2;
-var scrollSpeed = 10;
 var stripecount = 1;
 var stripeflag = true;
 
 var x = WIDTH;
-var y = HEIGHT / 20;
+var y = HEIGHT / 15;
 var xpos = 1;
 var raceInt;
 
 var track1;
+var player1;
 
 var skyclr = 'rgb(100,150,255)';
 var grassclr = 'rgb(25,155,25)';
@@ -24,6 +24,7 @@ function setup() {
     context = canvas.getContext('2d');
 
     track1 = new track();
+    player1 = new player();
     track1.draw(context);
     sky();
 }
@@ -84,7 +85,11 @@ function stripes(i){
 
 function sky(){
     context.fillStyle = skyclr;
-    context.fillRect(0, 0, WIDTH, (HEIGHT / 2) + 1);
+    context.fillRect(0, 0, WIDTH, HEIGHT / 2);
+}
+
+function player(){
+    this.vel = 0;
 }
 
 
@@ -103,10 +108,14 @@ function stopCar(){
 function race() {
     var button = document.getElementById('Race');
     button.disabled = true;
-    stripecount += 1;
+    stripecount = 1;
+    if (player1.vel == 0) {
+	stripeflag = true;
+    }
+    stripecount += player1.vel;
     x = WIDTH;
-    y = HEIGHT / 20;
-    context.clearRect (0, (HEIGHT / 2) + 1, WIDTH, HEIGHT);
+    y = HEIGHT / 15;
+    context.clearRect (0, HEIGHT / 2, WIDTH, HEIGHT);
     sky();
     track1.draw(context);
 }
@@ -116,3 +125,14 @@ function resetRace() {
 }
 
 //////////////////
+
+window.ondevicemotion = function (event) {
+    var accelx = event.accelerationIncludingGravity.x;
+    var accely = event.accelerationIncludingGravity.y;
+    var ele = document.getElementById("accelvalue").innerHTML=accelx;
+    if (player1.vel + accelx < 0) {
+	player1.vel = 0;
+    } else {
+	player1.vel += accelx;
+    }
+}
