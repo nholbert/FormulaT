@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <title>Straight Track</title>
+    <link rel="stylesheet" href="default.css">
+    <script type="text/javascript" src="rdtest.js"></script>
+</head>
+<body onload="setup();">
+    <canvas id="road" style="position: absolute; left: 0px; top: 0px; z-index: 0">Browser does not support HTML5</canvas>
+        
+    <button id="Reset" name="Reset" type="button" onclick="resetRace()" style="position: absolute; left: 850px; top: 400px; z-index: 2; font-weight: bold;">Reset Car</button>
+    <button id="Race" name="Race" type="button" onclick="tick()" style="position: absolute; left: 850px; top: 440px; z-index: 2; font-weight: bold;">Race!</button>
+
+</body>
+</html>
