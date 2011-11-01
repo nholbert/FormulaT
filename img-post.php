@@ -11,13 +11,14 @@
   $player_path = "/log_data/";
   
   
-  $data['id'] = "testID";
+  $data['id'] = "id";
+  $data['result'] = "result";
   $data['timestamp'] = "timestamp";
-  $data['img'] = "testIMG";
+  $data['img'] = "img";
   
   
   //load img data into array
-  $placeholders = array("{id}","{timestamp}","{img_data}");
+  $placeholders = array("{id}","{result}","{timestamp}","{img}");
   
   //Get the template.html as a string
   $tpl = file_get_contents($tpl_path.$tpl_file);

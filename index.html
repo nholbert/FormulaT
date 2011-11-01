@@ -4,9 +4,10 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <title>Painting Test</title>
+    <title>FormulaT Racing</title>
     <link rel="stylesheet" href="default.css">
     <script type="text/javascript" src="paint.js"></script>
+    <script type="text/javascript" src="graph.js"></script>
     <script type="text/javascript" src="track.js"></script>
     <script type="text/javascript" src="entities.js"></script>
 
@@ -14,7 +15,7 @@
     <script src="RGraph/libraries/RGraph.line.js"></script>             <!-- Just needed for line graphs -->
     <style>
         .error{
-            position: absolute; left: 200px; top: 150px; z-index: 3;
+            position: absolute; left: 200px; top: 150px; z-index: 5;
             width: 200px;
             background: rgb(43,215,153);
             box-shadow: 5px 5px 5px #000000;
@@ -28,11 +29,48 @@
     </style>
 </head>
 <body onload="init();">
-    <canvas id="paint" style="position: absolute; left: 0px; top: 0px; z-index: 0">Browser does not support HTML5</canvas>
-    <canvas id="track" style="position: absolute; left: 0px; top: 0px; z-index: 1">Browser does not support HTML5</canvas>
-    <canvas id="car" style="position: absolute; left: 0px; top: 0px; z-index: 2">Browser does not support HTML5</canvas>
-    <canvas id="graph" style="position: absolute; left: 650px; top: 170px; z-index:2">Browser does not support HTML5</canvas>
-    <img id="racecar" src="racecar.gif" style="display:none;">
+    <canvas id="paint" style="position: absolute; left: 0px; top: 0px; z-index: 2">Browser does not support HTML5</canvas>
+    <canvas id="track" style="position: absolute; left: 0px; top: 0px; z-index: 3">Browser does not support HTML5</canvas>
+    <canvas id="car" style="position: absolute; left: 0px; top: 0px; z-index: 4">Browser does not support HTML5</canvas>
+    <canvas id="graph" style="position: absolute; left: 650px; top: 170px; z-index:4">Browser does not support HTML5</canvas>
+    <canvas id="graphback" style="position: absolute; left: 50px; top: 75px; z-index: 0">Browser does not support HTML5</canvas>
+    <canvas id="graphnodes" style="position: absolute; left: 50px; top: 75px; z-index: 1">Browser does not support HTML5</canvas>
+    <img id="racecar" src="Images/racecar.gif" style="display:none;">
+    <img id="square" src="Images/square.png" width="350px" height="250px" style="position: absolute; left: 650px; top: 170px; z-index:5; display:none;">
+    <img id="corners" src="Images/corners.png" width="350px" height="250px" style="position: absolute; left: 650px; top: 170px; z-index:5; display:none;">
+    <img id="fig8" src="Images/fig8.png" width="350px" height="250px" style="position: absolute; left: 650px; top: 170px; z-index:5; display:none;">
+    
+    <div style="position: absolute; left: 700px; top: 20px; font-weight: bold; font-size: 14px"> Select Track --></div>
+    <select name="tracks" id="tracks" style="position: absolute; left: 810px; top: 18px;" onchange="init()">
+        <option value="Square" selected="selected">Square</option>
+        <option value="Figure8">Figure 8</option>
+        <option value="Corners">Corners</option>
+    </select>
+    <div style="position: absolute; left: 700px; top: 50px; font-weight: bold; font-size: 14px"> Set Max-Speed</div>
+    <select name= "brush" size="7" id="brushColor" style="position: absolute; left: 700px; top: 65px;">
+        <option value="#7C50A4" selected="selected">Violet-----1</option>
+        <option value="#345DA9">Blue-------3</option>
+        <option value="#54C4C4">Cyan-------5</option>
+        <option value="#F16A15">Orange-----7</option>
+        <option value="#D73229">Red--------9</option>
+        <option value="#000000">Black----MAX</option>
+    </select>
+    <button id="Clear" name="Clear" type="button" onclick="wipePaint()" style="position: absolute; left: 810px; top: 75px; font-weight: bold; display:block;">Clear Paint</button>
+    <button id="Reset" name="Reset" type="button" onclick="resetCar()" style="position: absolute; left: 810px; top: 100px; font-weight: bold; display:block;">Reset Car</button>
+    <button id="Race" name="Race" type="button" onclick="tick()" style="position: absolute; left: 810px; top: 140px; font-weight: bold; display:block;">Race!</button>
+    
+    <button id="resetGraph" name="resetGraph" type="button" onclick="resetGraph()" style="position: absolute; left: 140px; top: 20px; font-weight: bold; z-index: 5; display: none;">Reset Graph</button>
+    <button id="graphMode" name="graphMode" type="button" onclick="graphMode()" style="position: absolute; left: 260px; top: 20px; font-weight: bold; z-index: 5; display: block;">Switch to graphing-mode</button>
+    <button id="paintMode" name="paintMode" type="button" onclick="paintMode()" style="position: absolute; left: 260px; top: 20px; font-weight: bold; z-index: 5; display: none;">Switch to painting-mode</button>
+    
+    <button id="returnGraph" name="returnGraph" type="button" onclick="returnGraph()" style="position: absolute; left: 450px; top: 20px; font-weight: bold; z-index: 5; display: none;">Return to Graph</button>
+    <button id="exportGraph" name="exportGraph" type="button" onclick="exportGraph()" style="position: absolute; left: 450px; top: 20px; font-weight: bold; z-index: 5; display: none;">Export to Track</button>
+    
+
+    <div id="timer" name="timer" style="position: absolute; left: 435px; top: 150px; font-weight: bold; font-size: 14px; z-index: 4">Curr Time = 0.00</div>
+    <div id="lastTime" name="lastTime" style="position: absolute; left: 435px; top: 170px; font-weight: bold; font-size: 14px; z-index: 4">Last Time =</div>
+    <div id="bestTime" name="bestTime" style="position: absolute; left: 435px; top: 190px; font-weight: bold; font-size: 14px; z-index: 4">Best Time =</div>
+    
     <div id="crashMessage" class="error" style="display: none; text-align">
         <p style="font-size: 18px;">
            You went too fast and crashed! Be more careful next time!
@@ -53,27 +91,23 @@
            You did it! I didn't think you had it in ya!
         </p>
     </div>
-    <div style="position: absolute; left: 700px; top: 20px; font-weight: bold; font-size: 14px"> Select Track --></div>
-    <select name="tracks" id="tracks" style="position: absolute; left: 810px; top: 18px;" onchange="init()">
-        <option value="Square" selected="selected">Square</option>
-        <option value="Figure8">Figure 8</option>
-        <option value="Corners">Corners</option>
-    </select>
-    <div style="position: absolute; left: 700px; top: 50px; font-weight: bold; font-size: 14px"> Set Max-Speed</div>
-    <select name= "brush" size="7" id="brushColor" style="position: absolute; left: 700px; top: 65px;">
-        <option value="#7C50A4" selected="selected">Violet-----1</option>
-        <option value="#345DA9">Blue-------3</option>
-        <option value="#54C4C4">Cyan-------5</option>
-        <option value="#F16A15">Orange-----7</option>
-        <option value="#D73229">Red--------9</option>
-        <option value="#000000">Black----MAX</option>
-    </select>
-    <button id="Clear" name="Clear" type="button" onclick="wipePaint()" style="position: absolute; left: 810px; top: 75px; font-weight: bold;">Clear Paint</button>
-    <button id="Reset" name="Reset" type="button" onclick="resetCar()" style="position: absolute; left: 810px; top: 100px; font-weight: bold;">Reset Car</button>
-    <button id="Race" name="Race" type="button" onclick="tick()" style="position: absolute; left: 810px; top: 140px; font-weight: bold;">Race!</button>
-    <div id="timer" name="timer" style="position: absolute; left: 435px; top: 150px; font-weight: bold; font-size: 14px; z-index: 3">Curr Time = 0.00</div>
-    <div id="lastTime" name="lastTime" style="position: absolute; left: 435px; top: 170px; font-weight: bold; font-size: 14px; z-index: 3">Last Time =</div>
-    <div id="bestTime" name="bestTime" style="position: absolute; left: 435px; top: 190px; font-weight: bold; font-size: 14px; z-index: 3">Best Time =</div>
+    
+    
+    
+    <div id="help" class="error" style="left: 25px; top: 25px; width: 800px; display: block;">
+        <p style="font-size: 18px;">
+           <b>Welcome to FormulaT Racing!</b></p>
+        <p style="font-size: 14px;">
+            <i>If you're on a mobile device, FormulaT Racing works best as a webapp. In iOS, press the box with the arrow in it on the address bar and select "Add to Home Screen." Now FormulaT can be accessed without address and status bars directly from your home screen!  </i></p>
+        <p style="font-size: 14px;">
+           <b>In the painting mode:</b><br>
+           In this mode you'll be painting the track various colors that each represent a different maximum velocity. In the selection box to the right, select the paint color you'd like to use. The number next to the color name indicates the maximum velocity the car will reach while driving over that color.  Once you've selected the color you'd like to use, simply click or touch the track to paint! Keep in mind that if your car is below the velocity indicated by the color, it will accelerate steadily until it reaches its maximum speed. While the car will turn automatically, its ability to turn is affected by its velocity.  When you've finished painting, press the "Race" button! <br><i>NOTE: The FormulaT Racing car can't deccelerate too quickly!  If the color has a maximum speed more than three less than your current speed you'll crash!</i></p>
+        <p style="font-size: 14px;">
+            <b> In the graphing mode:</b><br>
+            In this mode you'll be creating a graph that the car will use to drive around the track. To get started, switch to "graphing mode." Notice that the numbers on the y-axis represent velocity and the number on the x-axis correspond to the 20 markers on each track.  Click or tap the graph to create a point.  If you're on a mobile device, tilt the device forward or backward to accelerate the point up and down the graph.  Once you're happy with the point's position, tap again to freeze the point in place.  If you're using a mouse, click and drag to create and position new points.  Once you've added all 20 points, you can edit individual points by clicking or tapping on them.  When you're done, press the "Export to Track" button to return to the track.  Now, when you press the "Race" button the car will drive around the track acording to the graph you've constructed!  If you need to make any changes, just press the "Return to Graph" button.
+        </p>
+    </div>
+    <button id="helpButton" name="helpButton" type="button" onclick="toggleHelp()" style="position: absolute; left: 5px; top: 5px; font-weight: bold; z-index: 6; display: block;">Hide Help</button>
 
 </body>
 </html>

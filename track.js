@@ -85,37 +85,37 @@ function getSqNodes() {
         id += 1;
         if (id < 3) {
             ny -= 50;
-            nodeArray.push( new node (nx, ny, id));
+            nodeArray.push( new node (nx, ny, id, 0, 0));
         }
         if (id > 2 && id < 8) {
             ny = 90
             nx -= 87
-            nodeArray.push( new node (nx, ny, id));
+            nodeArray.push( new node (nx, ny, id, 0, 0));
         }
         if (id == 8) {
             ny = 100;
             nx = 90;
-            nodeArray.push( new node (nx, ny, id));
+            nodeArray.push( new node (nx, ny, id, 0, 0));
         }
         if (id > 8 && id < 13) {
             ny += 60;
             nx = 85;
-            nodeArray.push( new node (nx, ny, id));
+            nodeArray.push( new node (nx, ny, id, 0, 0));
         }
         if (id > 12 && id < 18) {
             ny = 360;
             nx += 87;
-            nodeArray.push( new node (nx, ny, id));
+            nodeArray.push( new node (nx, ny, id, 0, 0));
         }
         if (id == 18) {
             ny = 340;
             nx = 605;
-            nodeArray.push( new node (nx, ny, id));
+            nodeArray.push( new node (nx, ny, id, 0, 0));
         }
         if (id > 18 && id < 21) {
             ny -= 50;
             nx = 605;
-            nodeArray.push( new node (nx, ny, id));
+            nodeArray.push( new node (nx, ny, id, 0, 0));
         }
         trcontext.textAlign = "center";
         trcontext.textBaseline = "middle";
@@ -180,100 +180,100 @@ function getfig8Nodes() {
         id += 1;
         switch (id) {
             case 1:
-                nodeArray.push( new node (nx, ny, id));
+                nodeArray.push( new node (nx, ny, id, 0, 0));
                 break;
             case 2:
                 ny -= 30;
                 nx -= 50;
-                nodeArray.push( new node (nx, ny, id));
+                nodeArray.push( new node (nx, ny, id, 0, 0));
                 break;
             case 3:
                 ny -= 20;
                 nx -= 65;
-                nodeArray.push( new node (nx, ny, id));
+                nodeArray.push( new node (nx, ny, id, 0, 0));
                 break;
             case 4:
                 ny += 20;
                 nx -= 65;
-                nodeArray.push( new node (nx, ny, id));
+                nodeArray.push( new node (nx, ny, id, 0, 0));
                 break;
             case 5:
                 ny += 60;
                 nx -= 70;
-                nodeArray.push( new node (nx, ny, id));
+                nodeArray.push( new node (nx, ny, id, 0, 0));
                 break;
             case 6:
                 ny += 130;
-                nodeArray.push( new node (nx, ny, id));
+                nodeArray.push( new node (nx, ny, id, 0, 0));
                 break;
             case 7:
                 ny += 60;
                 nx -= 70;
-                nodeArray.push( new node (nx, ny, id));
+                nodeArray.push( new node (nx, ny, id, 0, 0));
                 break;
             case 8:
                 ny += 20;
                 nx -= 65;
-                nodeArray.push( new node (nx, ny, id));
+                nodeArray.push( new node (nx, ny, id, 0, 0));
                 break;
             case 9:
                 ny -= 20;
                 nx -= 65;
-                nodeArray.push( new node (nx, ny, id));
+                nodeArray.push( new node (nx, ny, id, 0, 0));
                 break;
             case 10:
                 ny -= 70;
                 nx -= 60;
-                nodeArray.push( new node (nx, ny, id));
+                nodeArray.push( new node (nx, ny, id, 0, 0));
                 break;
             case 11:
                 ny -= 110;
                 //nx -= 60;
-                nodeArray.push( new node (nx, ny, id));
+                nodeArray.push( new node (nx, ny, id, 0, 0));
                 break;
             case 12:
                 ny -= 70;
                 nx += 60;
-                nodeArray.push( new node (nx, ny, id));
+                nodeArray.push( new node (nx, ny, id, 0, 0));
                 break;
             case 13:
                 ny -= 20;
                 nx += 65;
-                nodeArray.push( new node (nx, ny, id));
+                nodeArray.push( new node (nx, ny, id, 0, 0));
                 break;
             case 14:
                 ny += 20;
                 nx += 65;
-                nodeArray.push( new node (nx, ny, id));
+                nodeArray.push( new node (nx, ny, id, 0, 0));
                 break;
             case 15:
                 ny += 70;
                 nx += 70;
-                nodeArray.push( new node (nx, ny, id));
+                nodeArray.push( new node (nx, ny, id, 0, 0));
                 break;
             case 16:
                 ny += 110;
-                nodeArray.push( new node (nx, ny, id));
+                nodeArray.push( new node (nx, ny, id, 0, 0));
                 break;
             case 17:
                 ny += 70;
                 nx += 70;
-                nodeArray.push( new node (nx, ny, id));
+                nodeArray.push( new node (nx, ny, id, 0, 0));
                 break;
             case 18:
                 ny += 20;
                 nx += 65;
-                nodeArray.push( new node (nx, ny, id));
+                nodeArray.push( new node (nx, ny, id, 0, 0));
                 break;
             case 19:
                 ny -= 20;
                 nx += 65;
-                nodeArray.push( new node (nx, ny, id));
+                nodeArray.push( new node (nx, ny, id, 0, 0));
                 break;
             case 20:
                 ny -= 70;
                 nx += 60;
-                nodeArray.push( new node (nx, ny, id));
+                nodeArray.push( new node (nx, ny, id, 0, 0));
                 break;
         }
 
@@ -350,72 +350,72 @@ function getCornerNodes() {
         id += 1;
         if (id < 3) {
             ny -= 50;
-            nodeArray.push( new node (nx, ny, id));
+            nodeArray.push( new node (nx, ny, id, 0, 0));
         }
         if (id > 2 && id < 5) {
             ny += 15
             nx -= 100
-            nodeArray.push( new node (nx, ny, id));
+            nodeArray.push( new node (nx, ny, id, 0, 0));
         }
         if (id > 4 && id < 7) {
             ny -= 13;
             nx -= 100;
-            nodeArray.push( new node (nx, ny, id));
+            nodeArray.push( new node (nx, ny, id, 0, 0));
         }
         if (id == 7) {
             ny = 80;
             nx = 130;
-            nodeArray.push( new node (nx, ny, id));
+            nodeArray.push( new node (nx, ny, id, 0, 0));
         }
         if (id == 8) {
             ny += 75;
             nx += 30;
-            nodeArray.push( new node (nx, ny, id));
+            nodeArray.push( new node (nx, ny, id, 0, 0));
         }
         if (id == 9) {
             ny += 75;
             nx += 30;
-            nodeArray.push( new node (nx, ny, id));
+            nodeArray.push( new node (nx, ny, id, 0, 0));
         }
         if (id == 10){
             ny -= 5;
             nx -= 50;
-            nodeArray.push( new node (nx, ny, id));
+            nodeArray.push( new node (nx, ny, id, 0, 0));
         }
         if (id == 11) {
             ny -= 10;
             nx -= 50;
-            nodeArray.push( new node (nx, ny, id));
+            nodeArray.push( new node (nx, ny, id, 0, 0));
         }
         if (id == 12) {
             ny += 90;
             //nx -= 50;
-            nodeArray.push( new node (nx, ny, id));
+            nodeArray.push( new node (nx, ny, id, 0, 0));
         }
         if (id == 13) {
             ny = 390;
             //nx = nx;
-            nodeArray.push( new node (nx, ny, id));
+            nodeArray.push( new node (nx, ny, id, 0, 0));
         }
         if (id > 13 && id < 16) {
             //ny = ny;
             nx += 160;
-            nodeArray.push( new node (nx, ny, id));
+            nodeArray.push( new node (nx, ny, id, 0, 0));
         }
         if (id == 16) {
             ny = 300;
             //nx += 20;
-            nodeArray.push( new node (nx, ny, id));
+            nodeArray.push( new node (nx, ny, id, 0, 0));
         }
         if (id > 16 && id < 19) {
             ny += 30;
             nx += 100;
-            nodeArray.push( new node (nx, ny, id));
+            nodeArray.push( new node (nx, ny, id, 0, 0));
         }
         if (id > 18) {
             ny -= 80;
             //nx += 90;
-            nodeArray.push( new node (nx, ny, id));
+            nodeArray.push( new node (nx, ny, id, 0, 0));
         }
         trcontext.textAlign = "center";
         trcontext.textBaseline = "middle";

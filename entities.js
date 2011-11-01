@@ -2,10 +2,12 @@
 // ENTITIES //
 //----------//
 
-function node(x, y, id) {
+function node(x, y, id, vel, accel) {
     this.x = x;
     this.y = y;
     this.id = id;
+    this.vel = vel;
+    this.accel = accel;
 }
 
 function playerCar(x, y, vel, accel, heading, currNode){
@@ -52,8 +54,9 @@ function playerCar(x, y, vel, accel, heading, currNode){
             this.headingAdjust(diffx, diffy);
 	} else if (diffhyp < 50) {
             if (this.currNode == 19) {
+		lastFlag = true;
                 this.currNode = 0;
-                this.headingAdjust(diffx, diffy, currNode);
+                this.headingAdjust(diffx, diffy);
             } else {
                 this.currNode += 1;
                 nearNode = nodeArray[this.currNode];
@@ -86,6 +89,19 @@ function playerCar(x, y, vel, accel, heading, currNode){
         this.x -= this.xvel;
         this.y += this.yvel;
         dataArray.push(this.vel);
+	if (dataArray.length > 100){
+	    dataArray.shift();
+	}
         graphupdate();
+    }
+    
+    this.grabNodeValues = function() {
+	if (lastFlag) {
+	    this.maxvel = nodeArray[nodeArray.length - 1].vel;;
+	    this.accel = nodeArray[nodeArray.length - 1].accel;
+	} else {
+	    this.maxvel = nodeArray[this.currNode].vel;
+	    this.accel = nodeArray[this.currNode].accel;
+	}
     }
 }

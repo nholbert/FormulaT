@@ -18,14 +18,19 @@ var timer;
 var savedTime;
 var clockRunning = false;
 var timerRunning = false;
+var result = "none";
+var lastFlag;
 
 var drawing;
-
 var touchable = "createTouch" in document;
 
 function init() {
     setup();
     graphinit();
+    if (graphActive){
+	clearImages();
+	toggleTrackImages();
+    }
 }
 
 function setup() {
@@ -49,16 +54,16 @@ function setup() {
     }
     
     if (ptcanvas) {
-        if (isIPad() || isIPhone()) {
-            carcan.ontouchstart = touchDown;
-            carcan.ontouchmove = touchDrag;
-            carcan.ontouchend = touchUp;
-        } else {
-            carcan.onmouseup = mouseUp;
-            carcan.onmousemove = mouseMove;
-            carcan.onmousedown = mouseDown;
-            carcan.onmouseout = mouseOut;
-        }
+	if (isIPad() || isIPhone()) {
+	    carcan.ontouchstart = touchDown;
+	    carcan.ontouchmove = touchDrag;
+	    carcan.ontouchend = touchUp;
+	} else {
+	    carcan.onmouseup = mouseUp;
+	    carcan.onmousemove = mouseMove;
+	    carcan.onmousedown = mouseDown;
+	    carcan.onmouseout = mouseOut;
+	}
     }
     
     trackSelected = document.getElementById("tracks").selectedIndex;
@@ -119,7 +124,6 @@ function isIPhone() {
 //-----------------------//
 function race() {
     var button = document.getElementById('Race');
-    var result;
     if (player1.goFlag == 0) {
 	result = "win";
 	//writeIMG(result);
@@ -138,36 +142,46 @@ function race() {
         player1.goFlag = endcheck();
         // CHECK COLOR AND UPDATE MAX VELOCITY
         var colorAhead = colorcheck(2);
-        switch (colorAhead.data[0]) {
-            case 124: //VIOLET
-                player1.maxvel = 1;
-                break;
-            case 52: //BLUE
-                player1.maxvel = 3;
-                break;
-            case 84: //CYAN
-                player1.maxvel = 5;
-                break;
-            case 241: //ORANGE
-                player1.maxvel = 7;
-                break;
-            case 215: //RED
-                player1.maxvel = 9;
-                break;
-            case 0: //BLACK
-                player1.maxvel = 15;
-                break;
-        }
-        if ((player1.vel - player1.maxvel) >= 3){
-            toggle("speedMessage");
-            player1.goFlag = 2;
-        }
-        if (player1.vel > player1.maxvel) { // sets a max speed
-            player1.vel -= 0.1;
-            //player1.vel = player1.maxvel;
-        } else {
-            player1.vel += 0.05;
-        }
+        if (!graphMade) {			// if driving by paint
+	    switch (colorAhead.data[0]) {	// set maxvel based on color
+		case 124: //VIOLET
+		    player1.maxvel = 1;
+		    break;
+		case 52: //BLUE
+		    player1.maxvel = 3;
+		    break;
+		case 84: //CYAN
+		    player1.maxvel = 5;
+		    break;
+		case 241: //ORANGE
+		    player1.maxvel = 7;
+		    break;
+		case 215: //RED
+		    player1.maxvel = 9;
+		    break;
+		case 0: //BLACK
+		    player1.maxvel = 15;
+		    break;
+	    }
+	    if ((player1.vel - player1.maxvel) >= 3){   // if you try to slow down too quickly, crash
+		toggle("speedMessage");
+		player1.goFlag = 2;
+	    } else if ((player1.vel - player1.maxvel) >= 0.5){  // if you're moving to a slower color, slow down
+		player1.vel -= 0.1;
+	    } else {
+	    player1.vel += 0.05;			// otherwise, speed up at this rate
+	    }
+    
+	} else {
+	    player1.grabNodeValues();		// if driving by graph
+	    if (player1.accel > 0 && player1.vel > player1.maxvel){	// if you've reached max speed, set to max speed
+		player1.vel = player1.maxvel;
+	    } else if (player1.accel < 0 && player1.vel < player1.maxvel){ // if you've reached a min speed, set to that min speed
+		player1.vel = player1.maxvel;
+	    } else {
+	    player1.vel += (player1.accel * .1)  // otherwise, change vel according to accel factor
+	    }
+	}
         player1.checkNode(player1.x, player1.y);
         player1.update();
         carcontx.clearRect (0, 0, WIDTH, HEIGHT);
@@ -205,14 +219,54 @@ function colorcheck(layer) {
     }
 }
 
-function toggle(messID) {
-        var ele = document.getElementById(messID);
-	if(ele.style.display == "none") {
-    	    ele.style.display = "block";
-  	}
-	else {
-	    ele.style.display = "none";
-	}
+function toggle(ID) {
+    var ele = document.getElementById(ID);
+    if(ele.style.display == "none") {
+	ele.style.display = "block";
+    }
+    else {
+	ele.style.display = "none";
+    }
+}
+
+function toggleButton(ID) {
+    var ele = document.getElementById(ID);
+    ele.disabled = !ele.disabled;
+}
+
+function toggleZ(ID){
+    var ele = document.getElementById(ID);
+    switch (ele.style.zIndex) {
+	case "5":
+	    ele.style.zIndex = "0"; // if graph up, move down
+	    break;
+	case "6":
+	    ele.style.zIndex = "1";
+	    break;
+	case "0":
+	    ele.style.zIndex = "5"; // if graph down, move up
+	    break;
+	case "1":
+	    ele.style.zIndex = "6";
+	    break;
+    }
+    
+}
+
+function toggleHelp(){
+    var ele = document.getElementById("help");
+    var ele2 = document.getElementById("helpButton");
+    if(ele.style.display == "none") {
+	ele.style.display = "block";
+    }
+    else {
+	ele.style.display = "none";
+    }
+    if (ele2.innerHTML == "Hide Help"){
+	ele2.innerHTML = "Show Help";
+    } else {
+	ele2.innerHTML = "Hide Help";
+    }
 }
 
 function initializeClocks() {
@@ -287,60 +341,74 @@ function updateTimer() {
 //-----------------------//
 
 function mouseDown(event) {
-    // get the mouse location
-    var mx = event.pageX;
-    var my = event.pageY;
-    var r = 20;
-    if (!drawing) {
-        drawing = true;
-        paint(mx, my, r);
+    if (!graphActive){
+	// get the mouse location
+	var mx = event.pageX;
+	var my = event.pageY;
+	var r = 20;
+	if (!drawing) {
+	    drawing = true;
+	    paint(mx, my, r);
+	}
     }
 }
 
 function mouseMove(event) {
-    var mx = event.pageX;
-    var my = event.pageY;
-    var r = 20;
-    if ( drawing ) {  // check drawing flag
-        paint(mx, my, r);
+    if (!graphActive){
+	var mx = event.pageX;
+	var my = event.pageY;
+	var r = 20;
+	if ( drawing ) {  // check drawing flag
+	    paint(mx, my, r);
+	}
     }
 }
 
 function mouseUp(event) {
+    if (!graphActive){
     drawing = false; // on mouseup, set the drawing flag to false
+    }
 }
 
 function mouseOut(event) {
-    drawing = false;
+    if (!graphActive){
+	drawing = false;
+    }
 }
 
 function touchDown(event) {
-    // get the mouse location
-    for (var i=0; i<event.changedTouches.length; i++) {
-        var t = event.changedTouches[i];
-        var tx = t.pageX;
-        var ty = t.pageY;
-        var r = 20;
-        drawing = true;
-        paint(tx, ty, r);       
+    if (!graphActive){
+	// get the mouse location
+	for (var i=0; i<event.changedTouches.length; i++) {
+	    var t = event.changedTouches[i];
+	    var tx = t.pageX;
+	    var ty = t.pageY;
+	    var r = 20;
+	    drawing = true;
+	    paint(tx, ty, r);       
+	}
     }
 }
 
 function touchDrag(event) {
-    for (var i=0; i<event.changedTouches.length; i++) {
-        var t = event.changedTouches[i];
-        var tx = t.pageX;
-        var ty = t.pageY;
-        var r = 20;
-        if (drawing ) {
-            paint(tx, ty, r);
-        }        
+    if (!graphActive){
+	for (var i=0; i<event.changedTouches.length; i++) {
+	    var t = event.changedTouches[i];
+	    var tx = t.pageX;
+	    var ty = t.pageY;
+	    var r = 20;
+	    if (drawing ) {
+		paint(tx, ty, r);
+	    }        
+	}
     }
 }
 
 function touchUp(event) {
-    if (event.touches.length == 0) {
-        drawing = false;
+    if (!graphActive){
+	if (event.touches.length == 0) {
+	    drawing = false;
+	}
     }
 }
 
@@ -360,7 +428,7 @@ function wipePaint() {
 }
 
 function resetCar() {
-    //writeIMG();
+    //writeIMG(result);
     stopCar();
     initializeClocks();
     carcontx.clearRect (0, 0, WIDTH, HEIGHT);
@@ -384,14 +452,35 @@ function wipeMessages(){
     }
 }
 
+function clearImages(){
+    document.getElementById("square").style.display = "none";
+    document.getElementById("fig8").style.display = "none";
+    document.getElementById("corners").style.display = "none";
+}
+
 function selectTrack(){
     trackSelected = document.getElementById("tracks").selectedIndex;
 }
 
+function toggleTrackImages(){
+    switch (trackSelected){
+	case 0:
+	    toggle("square");
+	    break;
+	case 1:
+	    toggle("fig8");
+	    break;
+	case 2:
+	    toggle("corners");
+	    break;
+    }
+}
+
 // UNUSED
 function writeIMG(result) {
-    var canvas = document.getElementById("world");
-    var id = null;
+    var canvas = document.getElementById("paint");
+    var trackname = trackSelected;
+    var id = "test1";
     var timestamp = new Date().getTime();
     var img = canvas.toDataURL("image/png");
     var xmlhttp;
@@ -407,9 +496,9 @@ function writeIMG(result) {
     //        document.getElementById("myDiv").innerHTML=xmlhttp.responseText;
     //    }
     //}
-    xmlhttp.open("POST","/rigd/FormulaT/img-post.php",true);
+    xmlhttp.open("POST","img-post.php",true);
     xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    xmlhttp.send('id=' + id + '&results=' + result + '&time=' + timestamp + '&img=' + img);
+    xmlhttp.send('id=' + id + '&result=' + result + '&time=' + timestamp + '&img=' + img);
 }
 
 function stopCar(){
@@ -436,7 +525,7 @@ function graphinit() {
 
 function getGraph(id, data) {
     var graph = new RGraph.Line("graph", dataArray);
-    var gcolor = velcheck();
+    //var gcolor = velcheck();
     graph.Set('chart.background.barcolor1', 'rgba(255,255,255,1)');
     graph.Set('chart.background.barcolor2', 'rgba(255,255,255,1)');
     graph.Set('chart.background.grid.color', 'rgba(238,238,238,1)');
@@ -478,4 +567,62 @@ function velcheck() {
     if (player1.vel > 5) {
         return "black";
     }
+}
+
+//-------------------//
+//  BUTTON FUNCTIONS //
+//-------------------//
+
+function paintMode() {
+//    if (graphMade){
+//	var r = confirm("Returning to paint mode will reset the graph!  Are you sure you want to continue?");
+//    }
+    resetCar();
+    clearGraph();
+    document.getElementById("Clear").disabled = false;
+    document.getElementById("Reset").disabled = false;
+    document.getElementById("Race").disabled = false;
+    document.getElementById("resetGraph").style.display = "none";
+    document.getElementById("paintMode").style.display = "none";
+    document.getElementById("returnGraph").style.display = "none";
+    document.getElementById("exportGraph").style.display = "none";
+    document.getElementById("graphMode").style.display = "block";
+    document.getElementById("square").style.display = "none";
+    document.getElementById("corners").style.display = "none";
+    document.getElementById("fig8").style.display = "none";
+    document.getElementById("graphback").style.zIndex = 0;
+    document.getElementById("graphnodes").style.zIndex = 1;
+    graphActive = false;
+    graphMade = false;
+    // clear, reset, race active
+    // resetGraph, paintMode, returnGraph, exportGraph hidden
+    // graphMode show
+}
+
+function graphMode(){
+    resetCar();
+    document.getElementById("Clear").disabled = true;
+    document.getElementById("Reset").disabled = true;
+    document.getElementById("Race").disabled = true;
+    document.getElementById("resetGraph").style.display = "block";
+    document.getElementById("paintMode").style.display = "block";
+    document.getElementById("exportGraph").style.display = "block";
+    toggleTrackImages();
+    document.getElementById("returnGraph").style.display = "none";
+    document.getElementById("graphMode").style.display = "none";
+    document.getElementById("graphback").style.zIndex = 5;
+    document.getElementById("graphnodes").style.zIndex = 6;
+    if (activeNode == 0){
+	graphSetup();
+    }
+    graphActive = true;
+    // When graphActive = false
+    //// clear, reset, race disabled
+    //// resetGraph, paintMode, exportGraph show
+    //// graphMode, returnGraph hidden
+    
+    // When graphActive = true
+    //// clear, reset, race active
+    //// resetGraph, exportGraph, graphMode hidden
+    //// paintMode, returnGraph show
 }
